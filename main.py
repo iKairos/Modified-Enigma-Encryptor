@@ -47,3 +47,5 @@ if __name__ == "__main__":
         
         elif op == '2':
             enc = input("Enter a text to be encrypted: ")
+
+            text = encryptor.encrypt_text(enc)
