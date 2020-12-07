@@ -9,11 +9,13 @@ class Enigma:
 
         if type(plugboard) is not dict:
             self.plugboard = {" ": " "}
+        else:
+            self.plugboard = plugboard
 
         self.reflector = Rotors.EnigmaI[2] # gonna change this
 
         if rotors is None or type(rotors) is not list:
-            self.rotors = Rotors.CommericialEnigmaRotors
+            self.rotors = [list(rotor) for rotor in Rotors.CommericialEnigmaRotors]
         else:
             self.rotors = rotors
         
@@ -36,7 +38,7 @@ class Enigma:
             raise ValueError("Number of rotor settings should be equal to the number of rotors.")
         
         self.rotor_pointers = self.rotor_settings
-        self.encrypted_text = ""
+
         print(self.rotor_pointers)
     
     @property
@@ -59,16 +61,53 @@ class Enigma:
         
         out = None
 
-        temp =  self.rotors[0][self.base_alphabet.index(letter)] 
+        # First Rotor Logic
+        for _ in range(self.rotor_pointers[0]):
+            self.rotors[0].insert(0, self.rotors[0][-1])
+            self.rotors[0].pop(-1)
 
+        temp = self.rotors[0][self.base_alphabet.index(letter)]
+        print(f"ROT1: before: {letter} | after: {temp}")
+
+        #Turn rotor 1
+        self.rotor_pointers[0] += 1
+
+        # Second Rotor Logic
+
+        for _ in range(self.rotor_pointers[1]):
+            self.rotors[1].insert(0, self.rotors[1][-1])
+            self.rotors[1].pop(-1)
         
+        before = temp # debug
+        temp = self.rotors[1][self.base_alphabet.index(temp)]
+        
+        print(f"ROT2: before: {before} | after: {temp}\n")
+
+        #Third Rotor Logic 
+        for _ in range(self.rotor_pointers[2]):
+            self.rotors[2].insert(0, self.rotors[1][-1])
+            self.rotors[2].pop(-1)
+        
+        temp = self.rotors[2][self.base_alphabet.index(temp)]
+
+        # Turn rotor 2 if rotor 1 got a full revolution
+        if self.rotor_pointers[0] % 26 == 0:
+            self.rotor_pointers[1] += 1
+            self.rotor_pointers[0] = 0
+        
+        # Turn rotor 3 if rotor 2 got full revolution and rotor 1 does not revolve fully
+        if self.rotor_pointers[0] % 26 == 0 and self.rotor_pointers[0] % 26 != 0 and self.rotor_pointers[1] >= 25:
+            self.rotor_pointers[2] += 1
+            self.rotor_pointers[1] = 1
+
+        return temp
 
     def outbound_rotor(self):
         """
         Outbound input rotor function from left to right.
         """
         pass
-    
+
     def plugboard_operation(self, letter):
         """
         Plugboard that swaps two letters.
@@ -83,3 +122,17 @@ class Enigma:
         Reflects the letters to its own mapping.
         """
         pass
+
+    def encrypt_text(self, text: str):
+        text = text.upper().replace(" ", "")
+
+        encrypted_text = ""
+
+        for letter in text:
+            temp = self.plugboard_operation(letter)
+
+            temp = self.inbound_rotor(temp)
+
+            encrypted_text += temp
+        
+        return encrypted_text

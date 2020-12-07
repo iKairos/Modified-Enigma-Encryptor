@@ -7,4 +7,4 @@ if __name__ == "__main__":
         rotor_settings=['J', 'X', 'G']
     )
 
-    #print(encryptor.settings)
+    print(encryptor.encrypt_text("jc torres"))
