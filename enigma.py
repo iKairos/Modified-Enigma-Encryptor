@@ -51,6 +51,15 @@ class Enigma:
         
         return ret
     
+    @property 
+    def rotor_pointer_settings(self):
+        ret = []
+
+        for index in range(len(self.rotor_settings)):
+            ret.append(self.rotors[index][self.rotor_pointers[index]])
+        
+        return ret
+    
     def set_plugboard_wiring(self, wirings):
         if type(wirings) is not dict:
             self.plugboard = {" ": " "}

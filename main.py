@@ -3,11 +3,11 @@ from enigma import Enigma
 from os import path
 
 def init_menu():
-    menu = "MENU: \n"
+    menu = "\nMENU: \n"
     menu += "1. New Enigma Instance\n"
     menu += "2. Process a Text\n"
     menu += "3. Set Rotor Positions\n"
-    menu += "4. Print Enigma Settings"
+    menu += "4. Print Enigma Settings\n"
     menu += "5. Exit"
 
     print(menu)
@@ -16,10 +16,11 @@ if __name__ == "__main__":
     encryptor = None
 
     while True:
-        print(f"CURRENT ROTOR SETTINGS: {encryptor.settings}")
+        print(f"\nCURRENT ROTOR SETTINGS: {'None' if encryptor is None else encryptor.settings}")
         init_menu()
 
         op = input("Select an option: ")
+        print("\n")
 
         if op == '1':
             encryptor = Enigma()
@@ -51,5 +52,25 @@ if __name__ == "__main__":
             text = encryptor.encrypt_text(enc)
 
             print(f"Encrypted text: {text}")
+        
+        elif op == '3':
+            if encryptor is None:
+                print("Please create an enigma machine first.")
+            else:
+                rotors = input("Please enter rotor settings separated by commas per rotor: ").split(',')
 
-            #TAGRA
+                encryptor.set_rotor_settings(rotors)
+        
+        elif op == '4':
+            if encryptor is None:
+                print("Please create an enigma machine first.")
+            else:
+                print("Enigma Settings:\n")
+                print(f"\tRotor Settings: {encryptor.settings}\n")
+                print(f"\tCurrent Rotor Pointer: {encryptor.rotor_pointer_settings}\n")
+                print(f"\tPlugboard: {encryptor.plugboard}\n")
+        
+        elif op == '5':
+            break
+
+        print("============================")
