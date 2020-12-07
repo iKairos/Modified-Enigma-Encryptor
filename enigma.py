@@ -12,7 +12,7 @@ class Enigma:
         else:
             self.plugboard = plugboard
 
-        self.reflector = Rotors.EnigmaI[2] # gonna change this
+        self.reflector = 'EJMZALYXVBWFCRQUONTSPIKHGD'
 
         if rotors is None or type(rotors) is not list:
             self.rotors = [list(rotor) for rotor in Rotors.CommericialEnigmaRotors]
@@ -38,9 +38,6 @@ class Enigma:
             raise ValueError("Number of rotor settings should be equal to the number of rotors.")
         
         self.rotor_pointers = self.rotor_settings
-
-        #print(f"init setting: {self.rotor_pointers}")
-        #print(f"plugboard: {self.plugboard}")
     
     @property
     def settings(self):
@@ -91,8 +88,6 @@ class Enigma:
             shift.insert(0, shift[-1])
             shift.pop(-1)
         
-        #print(' '.join([c for c in self.base_alphabet]))
-        #print(' '.join([c for c in shift]))
         return shift
     
     def outbound_rotor_map(self, rotor_setting):
@@ -102,8 +97,6 @@ class Enigma:
             shift.append(shift[0])
             shift.pop(0)
         
-        #print(' '.join([c for c in self.base_alphabet]))
-        #print(' '.join([c for c in shift]))
         return shift
 
     def inbound_rotor(self, letter):
@@ -115,18 +108,12 @@ class Enigma:
         """
         # First Rotor Logic
         temp = self.inbound_rotor_map(self.rotor_pointers[0])[self.base_alphabet.index(letter)]
-        #print(f"ROT1: before: {letter} | after: {temp}")
 
         # Second Rotor Logic
-        before = temp # debug
         temp = self.inbound_rotor_map(self.rotor_pointers[1])[self.base_alphabet.index(temp)]
-        
-        #print(f"ROT2: before: {before} | after: {temp}")
 
         #Third Rotor Logic 
-        before = temp
         temp = self.inbound_rotor_map(self.rotor_pointers[2])[self.base_alphabet.index(temp)]
-        #print(f"ROT3: before: {before} | after: {temp}")
 
         return temp
 
@@ -136,15 +123,13 @@ class Enigma:
         """
         # Third Rotor
         temp = self.outbound_rotor_map(self.rotor_pointers[2])[self.base_alphabet.index(letter)]
-        #print(f"ROT1: before: {letter} | after: {temp}")
+
         # Second Rotor 
-        before = temp
         temp = self.outbound_rotor_map(self.rotor_pointers[1])[self.base_alphabet.index(temp)]
-        #print(f"ROT2: before: {before} | after: {temp}")
+
         # First Rotor 
-        before = temp
         temp = self.outbound_rotor_map(self.rotor_pointers[0])[self.base_alphabet.index(temp)]
-        #print(f"ROT1: before: {before} | after: {temp}")
+
         return temp
     
     def turn_rotors(self):
@@ -166,17 +151,14 @@ class Enigma:
         Plugboard that swaps two letters.
         """
         if letter in self.plugboard:
-            #print(f"PLUG: before: {letter} | after: {self.plugboard[letter]}")
             return self.plugboard[letter]
         else:
-            #print(f"PLUG: before: {letter} | after: {letter}")
             return letter
 
     def reflector_operation(self, letter):
         """
         Reflects the letters to its own mapping.
         """
-        #print(f"REFLECTOR: before: {letter} | after: {self.reflector[self.base_alphabet.index(letter)]}")
         return self.reflector[self.base_alphabet.index(letter)]
 
     def encrypt_text(self, text: str):
@@ -185,23 +167,17 @@ class Enigma:
         encrypted_text = ""
 
         for letter in text:
-            #print("PLUGBOARD OPS")
             temp = self.plugboard_operation(letter)
-            #print("==============")
-            #print("INBOUND ROTOR")
+
             temp = self.inbound_rotor(letter)
-            #print("==============")
-            #print("REFLECTOR")
+
             temp = self.reflector_operation(temp)
-            #print("==============")
-            #print("OUTBOUND ROTOR")
+
             temp = self.outbound_rotor(temp)
+
             self.turn_rotors()
-            #print("==============")
-            #print("PLUGBOARD OPS")
+
             temp = self.plugboard_operation(temp)
             encrypted_text += temp
-            #print(f"curr setting: {self.rotor_pointers}")
-            #print("\n")
         
         return encrypted_text
