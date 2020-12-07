@@ -57,10 +57,6 @@ class Enigma:
         Note: di pa dynamic. 
         Base case: 3 rotors
         """
-        entry = letter 
-        
-        out = None
-
         # First Rotor Logic
         for _ in range(self.rotor_pointers[0]):
             self.rotors[0].insert(0, self.rotors[0][-1])
@@ -73,7 +69,6 @@ class Enigma:
         self.rotor_pointers[0] += 1
 
         # Second Rotor Logic
-
         for _ in range(self.rotor_pointers[1]):
             self.rotors[1].insert(0, self.rotors[1][-1])
             self.rotors[1].pop(-1)
@@ -102,11 +97,32 @@ class Enigma:
 
         return temp
 
-    def outbound_rotor(self):
+    def outbound_rotor(self, letter):
         """
         Outbound input rotor function from left to right.
         """
-        pass
+        # Third Rotor
+        for _ in range(self.rotor_pointers[2]):
+            self.rotors[2].append(self.rotors[2][0])
+            self.rotors[2].pop(0)
+        
+        temp = self.rotors[2][self.base_alphabet.index(letter)]
+
+        # Second Rotor 
+        for _ in range(self.rotor_pointers[1]):
+            self.rotors[1].append(self.rotors[1][0])
+            self.rotors[1].pop(0)
+        
+        temp = self.rotors[1][self.base_alphabet.index(letter)]
+
+        # First Rotor 
+        for _ in range(self.rotor_pointers[0]):
+            self.rotors[0].append(self.rotors[0][0])
+            self.rotors[0].pop(0)
+        
+        temp = self.rotors[0][self.base_alphabet.index(letter)]
+
+        return temp
 
     def plugboard_operation(self, letter):
         """
@@ -121,7 +137,7 @@ class Enigma:
         """
         Reflects the letters to its own mapping.
         """
-        pass
+        return self.reflector[self.base_alphabet.index(letter)]
 
     def encrypt_text(self, text: str):
         text = text.upper().replace(" ", "")
@@ -132,6 +148,12 @@ class Enigma:
             temp = self.plugboard_operation(letter)
 
             temp = self.inbound_rotor(temp)
+
+            temp = self.reflector_operation(temp)
+
+            temp = self.outbound_rotor(temp)
+
+            temp = self.plugboard_operation(temp)
 
             encrypted_text += temp
         
