@@ -51,3 +51,5 @@ if __name__ == "__main__":
             text = encryptor.encrypt_text(enc)
 
             print(f"Encrypted text: {text}")
+
+            #TAGRA
