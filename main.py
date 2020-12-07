@@ -6,8 +6,8 @@ def init_menu():
     menu = "MENU: \n"
     menu += "1. New Enigma Instance\n"
     menu += "2. Process a Text\n"
-    menu += "4. Set Rotor Positions\n"
-    menu += "5. Print Enigma Settings"
+    menu += "3. Set Rotor Positions\n"
+    menu += "4. Print Enigma Settings"
     menu += "5. Exit"
 
     print(menu)
@@ -49,3 +49,5 @@ if __name__ == "__main__":
             enc = input("Enter a text to be encrypted: ")
 
             text = encryptor.encrypt_text(enc)
+
+            print(f"Encrypted text: {text}")
