@@ -30,7 +30,7 @@ class Vigenere:
         decrypted_text = []
         counter = 0
 
-        for letter in encrypted_text:
+        for letter in plain_text:
             if counter == len(self.key_code):
                 counter = 0
 
@@ -46,4 +46,5 @@ class Vigenere:
                 decrypted_text.append(chr(number))
                 counter += 1
 
+        msg = ''
         return msg.join(decrypted_text)
