@@ -33,9 +33,11 @@ if __name__ == "__main__":
 
                     if path.isfile(file_dir):
                         with open(file_dir) as wirings:
-                            plugboard_wirings = json.loads(wirings)
+                            plugboard_wirings = json.load(wirings)
                         
                             encryptor.set_plugboard_wiring(plugboard_wirings)
+
+                            break
                     else:
                         print("Directory does not exist, try again.")
             
