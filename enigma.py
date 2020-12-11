@@ -73,15 +73,19 @@ class Enigma:
         else:
             self.rotor_settings = new_settings[0:3]
 
-            if bool(self.rotor_settings) and all(isinstance(elem, str) for elem in self.rotor_settings):
-                temp = []
+            try:
+                if bool(self.rotor_settings) and all(isinstance(elem, str) for elem in self.rotor_settings):
+                    temp = []
 
-                for index in range(len(self.rotor_settings)):
-                    temp.append(self.rotors[index].index(self.rotor_settings[index]))
-                
-                self.rotor_settings = temp
-            else:
-                raise ValueError("Rotor settings should be letters.")
+                    for index in range(len(self.rotor_settings)):
+                        temp.append(self.rotors[index].index(self.rotor_settings[index]))
+                    
+                    self.rotor_settings = temp
+                else:
+                    raise ValueError("Rotor settings should be letters.")
+            except ValueError:
+                print("Wrong key format, try again.")
+                return
         
         self.rotor_pointers = self.rotor_settings
         self.vigenere = new_settings[3:len(new_settings)]

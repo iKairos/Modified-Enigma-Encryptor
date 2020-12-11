@@ -6,7 +6,7 @@ def init_menu():
     menu = "\nMENU: \n"
     menu += "1. New Enigma Instance\n"
     menu += "2. Process a Text\n"
-    menu += "3. Set Rotor Positions\n"
+    menu += "3. Set Key\n"
     menu += "4. Print Enigma Settings\n"
     menu += "5. Exit"
 
@@ -25,27 +25,33 @@ if __name__ == "__main__":
         print("\n")
 
         if op == '1':
-            encryptor = Enigma()
+            plugs = None 
+            keys = None
 
             has_plugs = True if input("Do you have a custom plugboard wiring combination? (y/n)").lower() == 'y' else False
 
             if has_plugs:
-                while True:
-                    file_dir = input("Specify the directory of the JSON plugboard combination: ")
+                file_dir = input("Specify the directory of the JSON plugboard combination: ")
 
-                    if path.isfile(file_dir):
-                        with open(file_dir) as wirings:
-                            plugboard_wirings = json.load(wirings)
-                        
-                            encryptor.set_plugboard_wiring(plugboard_wirings)
+                if path.isfile(file_dir):
+                    with open(file_dir) as wirings:
+                        plugboard_wirings = json.load(wirings)
+                    
+                        plugs = plugboard_wirings
 
-                            break
-                    else:
-                        print("Directory does not exist, try again.")
+                        break
+                else:
+                    print("Directory does not exist, try again.")
+                    continue
             
-            keys = input("Please enter keys separated by commas: ").split(',')
+            key_in = input("Please enter keys separated by commas: ").split(',')
 
-            encryptor.set_rotor_settings(keys)
+            if type(key_in) != list or len(key_in) != 9:
+                print("Wrong key format, try again. (Default Settings Set)")
+            else:
+                keys = key_in
+            
+            encryptor = Enigma(plugs, rotor_settings=keys)
         
         elif op == '2':
             ask = input("Encrypt of Decrypt? (e/d) ").lower()
@@ -73,9 +79,12 @@ if __name__ == "__main__":
             if encryptor is None:
                 print("Please create an enigma machine first.")
             else:
-                rotors = input("Please enter rotor settings separated by commas per rotor: ").split(',')
+                keys = input("Please enter the keys separated by commas: ").split(',')
 
-                encryptor.set_rotor_settings(rotors)
+                if type(keys) != list or len(keys) != 9:
+                    print("Wrong key format, try again.")
+                else:
+                    encryptor.set_rotor_settings(keys)
         
         elif op == '4':
             if encryptor is None:
