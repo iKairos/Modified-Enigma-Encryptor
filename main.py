@@ -55,9 +55,9 @@ if __name__ == "__main__":
             encryptor = Enigma(plugs, rotor_settings=keys)
         
         elif op == '2':
-            ask = input("Encrypt of Decrypt? (e/d)").lower()
-
             while True:
+                ask = input("Encrypt of Decrypt? (e/d)").lower()
+                
                 if ask == 'e':
                     enc = input("Enter a text to be encrypted: ")
 
