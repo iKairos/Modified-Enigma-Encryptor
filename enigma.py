@@ -1,8 +1,9 @@
 from rotor_details import Rotors
+from vigenere import Vigenere
 
 class Enigma:
     """
-    Simulation of Enigma machine used by the Germans during World War 2.
+    A modified Enigma machine incorporating different cryptography algorithms.
     """
     def __init__(self, plugboard = {" ": " "}, rotors = None, rotor_settings = None):
         self.base_alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -20,9 +21,11 @@ class Enigma:
             self.rotors = rotors
         
         if rotor_settings is None or type(rotor_settings) is not list:
-            self.rotor_settings = [0 for i in range(len(self.rotors))]
+            self.rotor_settings = [0 for i in range(3)]
+            self.vigenere = ['A', 'A', 'A', 'A', 'A', 'A']
         else:
-            self.rotor_settings = rotor_settings
+            self.rotor_settings = rotor_settings[0:3]
+            self.vigenere = rotor_settings[3:len(rotor_settings)]
 
             if bool(self.rotor_settings) and all(isinstance(elem, str) for elem in self.rotor_settings):
                 temp = []
@@ -34,10 +37,11 @@ class Enigma:
             else:
                 raise ValueError("Rotor settings should be letters.")
 
-        if len(self.rotors) != len(self.rotor_settings):
+        if len(self.rotors) != len(self.rotor_settings[0:3]):
             raise ValueError("Number of rotor settings should be equal to the number of rotors.")
         
         self.rotor_pointers = self.rotor_settings
+        self.vig = Vigenere([self.base_alphabet.index(i) for i in self.vigenere])
     
     @property
     def settings(self):
@@ -67,7 +71,7 @@ class Enigma:
         if new_settings is None or type(new_settings) is not list:
             self.rotor_settings = [0 for i in range(len(self.rotors))]
         else:
-            self.rotor_settings = new_settings
+            self.rotor_settings = new_settings[0:3]
 
             if bool(self.rotor_settings) and all(isinstance(elem, str) for elem in self.rotor_settings):
                 temp = []
@@ -80,6 +84,7 @@ class Enigma:
                 raise ValueError("Rotor settings should be letters.")
         
         self.rotor_pointers = self.rotor_settings
+        self.vigenere = new_settings[3:len(new_settings)]
     
     def inbound_rotor_map(self, rotor_setting):
         shift = list(self.base_alphabet)
@@ -178,6 +183,33 @@ class Enigma:
             self.turn_rotors()
 
             temp = self.plugboard_operation(temp)
+
             encrypted_text += temp
         
+        encrypted_text = self.vig.encrypt(encrypted_text)
+        
         return encrypted_text
+    
+    def decrypt_text(self, text: str):
+        text = text.upper().replace(" ", "")
+
+        text = self.vig.decrypt(text)
+
+        decrypted_text = ""
+
+        for letter in text:
+            temp = self.plugboard_operation(letter)
+
+            temp = self.inbound_rotor(letter)
+
+            temp = self.reflector_operation(temp)
+
+            temp = self.outbound_rotor(temp)
+
+            self.turn_rotors()
+
+            temp = self.plugboard_operation(temp)
+
+            decrypted_text += temp
+        
+        return decrypted_text

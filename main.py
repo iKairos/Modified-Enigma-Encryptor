@@ -17,6 +17,8 @@ if __name__ == "__main__":
 
     while True:
         print(f"\nCURRENT ROTOR SETTINGS: {'None' if encryptor is None else encryptor.settings}")
+        print(f"\nCURRENT VIGENERE: {'None' if encryptor is None else encryptor.vigenere}")
+
         init_menu()
 
         op = input("Select an option: ")
@@ -41,20 +43,32 @@ if __name__ == "__main__":
                     else:
                         print("Directory does not exist, try again.")
             
-            has_rotors = True if input("Do you want to set the rotor settings manually? (y/n)").lower() == 'y' else False
+            keys = input("Please enter keys separated by commas: ").split(',')
 
-            if has_rotors:
-                rotors = input("Please enter rotor settings separated by commas per rotor: ").split(',')
-
-                encryptor.set_rotor_settings(rotors)
+            encryptor.set_rotor_settings(keys)
         
         elif op == '2':
-            enc = input("Enter a text to be encrypted: ")
+            ask = input("Encrypt of Decrypt? (e/d) ").lower()
 
-            text = encryptor.encrypt_text(enc)
+            while True:
+                if ask == 'e':
+                    enc = input("Enter a text to be encrypted: ")
 
-            print(f"Encrypted text: {text}")
-        
+                    text = encryptor.encrypt_text(enc)
+
+                    print(f"Encrypted text: {text}")
+                    
+                    break
+                elif ask == 'd':
+                    dec = input("Enter a text to be encrypted: ")
+
+                    text = encryptor.decrypt_text(dec)
+
+                    print(f"Decrypted text: {text}")
+
+                    break
+                else:
+                    print("Wrong option, try again.")
         elif op == '3':
             if encryptor is None:
                 print("Please create an enigma machine first.")
