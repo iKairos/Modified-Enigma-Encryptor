@@ -1,5 +1,8 @@
+import numpy as np
 from rotor_details import Rotors
 from vigenere import Vigenere
+from cryptogram import Crypto, match
+from matrix_cryptography import Matrix
 
 class Enigma:
     """
@@ -23,9 +26,15 @@ class Enigma:
         if rotor_settings is None or type(rotor_settings) is not list:
             self.rotor_settings = [0 for i in range(3)]
             self.vigenere = ['A', 'A', 'A', 'A', 'A', 'A']
+            self.matrix_crypt = Crypto(np.array([[1, 2, 0], [-1,1,3], [1,-1,-4]]))
         else:
             self.rotor_settings = rotor_settings[0:3]
-            self.vigenere = rotor_settings[3:len(rotor_settings)]
+            self.vigenere = rotor_settings[3:9]
+            self.matrix_crypt = [
+                [self.base_alphabet.index(i) for i in rotor_settings[9:12]],
+                [self.base_alphabet.index(i) for i in rotor_settings[12:15]],
+                [self.base_alphabet.index(i) for i in rotor_settings[15:18]]
+            ]
 
             if bool(self.rotor_settings) and all(isinstance(elem, str) for elem in self.rotor_settings):
                 temp = []
@@ -88,7 +97,12 @@ class Enigma:
                 return
         
         self.rotor_pointers = self.rotor_settings
-        self.vigenere = new_settings[3:len(new_settings)]
+        self.vigenere = new_settings[3:9]
+        self.matrix_crypt = [
+                [self.base_alphabet.index(i) for i in new_settings[9:12]],
+                [self.base_alphabet.index(i) for i in new_settings[12:15]],
+                [self.base_alphabet.index(i) for i in new_settings[15:18]]
+            ]
     
     def inbound_rotor_map(self, rotor_setting):
         shift = list(self.base_alphabet)
@@ -151,7 +165,7 @@ class Enigma:
             self.rotor_pointers[0] = 0
         
         # Turn rotor 3 if rotor 2 got full revolution and rotor 1 does not revolve fully
-        if self.rotor_pointers[0] % 26 == 0 and self.rotor_pointers[0] % 26 != 0 and self.rotor_pointers[1] >= 25:
+        if self.rotor_pointers[1] % 26 == 0 and self.rotor_pointers[0] % 26 != 0 and self.rotor_pointers[1] >= 25:
             self.rotor_pointers[2] += 1
             self.rotor_pointers[1] = 1
 
@@ -191,11 +205,52 @@ class Enigma:
             encrypted_text += temp
         
         encrypted_text = self.vig.encrypt(encrypted_text)
+
+        processed = Crypto.convert(encrypted_text)
+
+        encrypted_text = Crypto.encode(processed, Matrix(self.matrix_crypt))
+
+        to_text = ""
+
+        for code_group in encrypted_text:
+            for code in code_group:
+                to_text += f"{code} "
         
-        return encrypted_text
+        return to_text
     
-    def decrypt_text(self, text: str):
-        text = text.upper().replace(" ", "")
+    def decrypt_text(self, text):
+        text = [int(x) for x in text.split(' ')]
+
+        processed = [text[i:i+3] for i in range(0,len(text),3)]
+
+        if len(processed[len(processed)-1]) == 2:
+            processed[len(processed)-1].append(0)
+        elif len(processed[len(processed)-1]) == 1:
+            processed[len(processed)-1].append(0)
+            processed[len(processed)-1].append(0)
+        
+        decoder = Matrix(self.matrix_crypt)
+
+        decoded = Crypto.decode(processed, decoder)
+
+        decoded_message = ""
+
+        for code_group in decoded:
+            for code in code_group:
+                decoded_message += f"{int(code)} "
+        
+        decoded_message = decoded_message[0:len(decoded_message)-1]
+
+        message = [int(x) for x in decoded_message.split(' ')]
+
+        converted = ""
+
+        for number in message:
+            for key,value in match.items():
+                if value == number:
+                    converted += key
+        
+        text = converted.upper().replace(" ", "")
 
         text = self.vig.decrypt(text)
 

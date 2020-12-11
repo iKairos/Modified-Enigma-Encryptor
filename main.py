@@ -18,6 +18,7 @@ if __name__ == "__main__":
     while True:
         print(f"\nCURRENT ROTOR SETTINGS: {'None' if encryptor is None else encryptor.settings}")
         print(f"\nCURRENT VIGENERE: {'None' if encryptor is None else encryptor.vigenere}")
+        print(f"\nCURRENT MATRIX: {'None' if encryptor is None else encryptor.matrix_crypt}")
 
         init_menu()
 
@@ -46,7 +47,7 @@ if __name__ == "__main__":
             
             key_in = input("Please enter keys separated by commas: ").split(',')
 
-            if type(key_in) != list or len(key_in) != 9:
+            if type(key_in) != list or len(key_in) != 18:
                 print("Wrong key format, try again. (Default Settings Set)")
             else:
                 keys = key_in
@@ -54,7 +55,7 @@ if __name__ == "__main__":
             encryptor = Enigma(plugs, rotor_settings=keys)
         
         elif op == '2':
-            ask = input("Encrypt of Decrypt? (e/d) ").lower()
+            ask = input("Encrypt of Decrypt? (e/d)").lower()
 
             while True:
                 if ask == 'e':
@@ -66,7 +67,7 @@ if __name__ == "__main__":
                     
                     break
                 elif ask == 'd':
-                    dec = input("Enter a text to be encrypted: ")
+                    dec = input("Enter a text to be decrypted: ")
 
                     text = encryptor.decrypt_text(dec)
 
@@ -81,7 +82,7 @@ if __name__ == "__main__":
             else:
                 keys = input("Please enter the keys separated by commas: ").split(',')
 
-                if type(keys) != list or len(keys) != 9:
+                if type(keys) != list or len(keys) != 18:
                     print("Wrong key format, try again.")
                 else:
                     encryptor.set_rotor_settings(keys)
