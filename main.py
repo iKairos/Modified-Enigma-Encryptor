@@ -87,9 +87,9 @@ if __name__ == "__main__":
             if encryptor is None:
                 print("Please create an enigma machine first.")
             else:
-                keys = list(input("Please enter the key: "))
+                keys = input("Please enter the key: ")
 
-                if type(keys) != list or len(keys) != 18:
+                if any(char in not_allowed for char in keys) or len(keys) != 18:
                     print("Wrong key format, try again.")
                 else:
                     encryptor.set_rotor_settings(keys)
