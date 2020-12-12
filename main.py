@@ -1,5 +1,6 @@
 import json
 from enigma import Enigma
+from rotor_details import Rotors
 from os import path
 
 def init_menu():
@@ -8,7 +9,8 @@ def init_menu():
     menu += "2. Process a Text\n"
     menu += "3. Set Key\n"
     menu += "4. Print Enigma Settings\n"
-    menu += "5. Exit"
+    menu += "5. Select Rotor Group\n"
+    menu += "6. Exit\n" 
 
     print(menu)
 
@@ -16,11 +18,12 @@ if __name__ == "__main__":
     encryptor = None
 
     not_allowed = "\"[].!@#$%^&*()-+?_=,<>/\"\'\'1234567890"
-
+    
     while True:
         print(f"\nCURRENT ROTOR SETTINGS: {'None' if encryptor is None else encryptor.settings}")
         print(f"\nCURRENT VIGENERE: {'None' if encryptor is None else encryptor.vigenere}")
         print(f"\nCURRENT MATRIX: {'None' if encryptor is None else encryptor.matrix_crypt}")
+        print(f"\nCURRENT ROTORS: {'None' if encryptor is None else encryptor.rotors}")
 
         init_menu()
 
@@ -55,6 +58,15 @@ if __name__ == "__main__":
                 keys = key_in.upper()
             
                 encryptor = Enigma(plugs, rotor_settings=list(keys))
+            
+            rotor_who = input("Select a rotor group. (1 - Odd Group | 2- Even Group): ")
+
+            if rotor_who == '1':
+                encryptor.rotors = Rotors.OddSet
+            elif rotor_who == '2':
+                encryptor.rotors = Rotors.EvenSet
+            else:
+                print("Wrong input, try again.")
         
         elif op == '2':
             while True:
@@ -105,6 +117,18 @@ if __name__ == "__main__":
                 print(f"\tPlugboard: {encryptor.plugboard}\n")
         
         elif op == '5':
+            if encryptor is None:
+                print("Please create an enigma machine first.")
+            else:
+                rotor_who = input("Select a rotor group. (1 - Odd Group | 2- Even Group): ")
+
+                if rotor_who == '1':
+                    encryptor.rotors = Rotors.OddSet
+                elif rotor_who == '2':
+                    encryptor.rotors = Rotors.EvenSet
+                else:
+                    print("Wrong input, try again.")
+        elif op == '6':
             break
         else:
             print("Wrong option, try again.")
