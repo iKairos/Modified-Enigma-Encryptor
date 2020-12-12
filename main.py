@@ -22,7 +22,7 @@ if __name__ == "__main__":
         print(f"\nCURRENT ROTOR SETTINGS: {'None' if encryptor is None else encryptor.settings}")
         print(f"\nCURRENT VIGENERE: {'None' if encryptor is None else encryptor.vigenere}")
         print(f"\nCURRENT MATRIX: {'None' if encryptor is None else encryptor.matrix_crypt}")
-        print(f"\nCURRENT ROTORS: {'None' if encryptor is None else encryptor.rotors}")
+        #print(f"\nCURRENT ROTORS: {'None' if encryptor is None else encryptor.rotors}")
 
         init_menu()
 
@@ -58,6 +58,7 @@ if __name__ == "__main__":
             
                 encryptor = Enigma(plugs, rotor_settings=list(keys))
             
+            """
             rotor_who = input("Select a rotor group. (1 - Odd Group | 2- Even Group): ")
 
             if rotor_who == '1':
@@ -66,6 +67,7 @@ if __name__ == "__main__":
                 encryptor.rotors = Rotors.EvenSet
             else:
                 print("Wrong input, try again.")
+            """
         
         elif op == '2':
             while True:
