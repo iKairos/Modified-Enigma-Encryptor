@@ -28,12 +28,12 @@ class Enigma:
             self.vigenere = ['A', 'A', 'A', 'A', 'A', 'A']
             self.matrix_crypt = np.array([[1, 2, 0], [-1,1,3], [1,-1,-4]])
         else:
-            self.rotor_settings = rotor_settings[0:3]
-            self.vigenere = rotor_settings[3:9]
+            self.rotor_settings = rotor_settings[9:12]
+            self.vigenere = rotor_settings[3:6] + rotor_settings[15:18]
             self.matrix_crypt = [
-                [self.base_alphabet.index(i) for i in rotor_settings[9:12]],
-                [self.base_alphabet.index(i) for i in rotor_settings[12:15]],
-                [self.base_alphabet.index(i) for i in rotor_settings[15:18]]
+                [self.base_alphabet.index(i) for i in rotor_settings[0:3]],
+                [self.base_alphabet.index(i) for i in rotor_settings[6:9]],
+                [self.base_alphabet.index(i) for i in rotor_settings[12:15]]
             ]
 
             if bool(self.rotor_settings) and all(isinstance(elem, str) for elem in self.rotor_settings):
@@ -89,7 +89,7 @@ class Enigma:
         if new_settings is None or type(new_settings) is not list:
             self.rotor_settings = [0 for i in range(len(self.rotors))]
         else:
-            self.rotor_settings = new_settings[0:3]
+            self.rotor_settings = new_settings[9:12]
 
             try:
                 if bool(self.rotor_settings) and all(isinstance(elem, str) for elem in self.rotor_settings):
@@ -106,12 +106,12 @@ class Enigma:
                 return
         
         self.rotor_pointers = self.rotor_settings
-        self.vigenere = new_settings[3:9]
+        self.vigenere = new_settings[3:6] + new_settings[15:18]
         self.matrix_crypt = [
-                [self.base_alphabet.index(i) for i in new_settings[9:12]],
-                [self.base_alphabet.index(i) for i in new_settings[12:15]],
-                [self.base_alphabet.index(i) for i in new_settings[15:18]]
-            ]
+                [self.base_alphabet.index(i) for i in new_settings[0:3]],
+                [self.base_alphabet.index(i) for i in new_settings[6:9]],
+                [self.base_alphabet.index(i) for i in new_settings[12:15]]
+        ]
     
     def inbound_rotor_map(self, rotor_setting):
         """

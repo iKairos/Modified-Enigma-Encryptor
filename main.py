@@ -29,9 +29,9 @@ if __name__ == "__main__":
             plugs = None 
             keys = None
 
-            has_plugs = True if input("Do you have a custom plugboard wiring combination? (y/n)").lower() == 'y' else False
+            has_plugs = input("Do you have a custom plugboard wiring combination? (y/n)").lower()
 
-            if has_plugs:
+            if has_plugs == 'y':
                 file_dir = input("Specify the directory of the JSON plugboard combination: ")
 
                 if path.isfile(file_dir):
