@@ -54,6 +54,9 @@ class Enigma:
     
     @property
     def settings(self):
+        """
+        Returns the settings of the rotors.
+        """
         ret = []
 
         for index in range(len(self.rotor_settings)):
@@ -71,12 +74,18 @@ class Enigma:
         return ret
     
     def set_plugboard_wiring(self, wirings):
+        """
+        Returns the plugboard wirings.
+        """
         if type(wirings) is not dict:
             self.plugboard = {" ": " "}
         else:
             self.plugboard = wirings
     
     def set_rotor_settings(self, new_settings):
+        """
+        Sets the settings for all algorithms.
+        """
         if new_settings is None or type(new_settings) is not list:
             self.rotor_settings = [0 for i in range(len(self.rotors))]
         else:
@@ -105,6 +114,9 @@ class Enigma:
             ]
     
     def inbound_rotor_map(self, rotor_setting):
+        """
+        Shifts the inbound rotors based on the settings of the rotors.
+        """
         shift = list(self.base_alphabet)
 
         for _ in range(rotor_setting):
@@ -114,6 +126,9 @@ class Enigma:
         return shift
     
     def outbound_rotor_map(self, rotor_setting):
+        """
+        Shifts the outbound rotors back to place based on the settings of the rotors.
+        """
         shift = list(self.base_alphabet)
 
         for _ in range(rotor_setting):
@@ -156,6 +171,9 @@ class Enigma:
         return temp
     
     def turn_rotors(self):
+        """
+        Turns the rotors every input.
+        """
         #Turn rotor 1
         self.rotor_pointers[0] += 1
         
@@ -185,6 +203,9 @@ class Enigma:
         return self.reflector[self.base_alphabet.index(letter)]
 
     def encrypt_text(self, text: str):
+        """
+        Encrypts a plaintext.
+        """
         text = text.upper().replace(" ", "")
 
         encrypted_text = ""
@@ -219,6 +240,9 @@ class Enigma:
         return to_text
     
     def decrypt_text(self, text):
+        """
+        Decrypts a plaintext.
+        """
         text = [int(x) for x in text.split(' ')]
 
         processed = [text[i:i+3] for i in range(0,len(text),3)]
