@@ -7,10 +7,9 @@ def init_menu():
     menu = "\nMENU: \n"
     menu += "1. New Enigma Instance\n"
     menu += "2. Process a Text\n"
-    menu += "3. Set Key\n"
-    menu += "4. Print Enigma Settings\n"
-    menu += "5. Select Rotor Group\n"
-    menu += "6. Exit\n" 
+    menu += "3. Print Enigma Settings\n"
+    menu += "4. Select Rotor Group\n"
+    menu += "5. Exit\n" 
 
     print(menu)
 
@@ -89,6 +88,7 @@ if __name__ == "__main__":
                         text = encryptor.decrypt_text(dec)
 
                         print(f"Decrypted text: {text}")
+                        print("NOTE: Create a new enigma machine to decrypt.")
                     else:
                         print("Wrong format. Please try again.")
 
@@ -99,24 +99,12 @@ if __name__ == "__main__":
             if encryptor is None:
                 print("Please create an enigma machine first.")
             else:
-                keys = input("Please enter the key: ")
-
-                if any(char in not_allowed for char in keys) or len(keys) != 18:
-                    print("Wrong key format, try again.")
-                else:
-                    keys = keys.upper()
-                    encryptor.set_rotor_settings(list(keys))
-        
-        elif op == '4':
-            if encryptor is None:
-                print("Please create an enigma machine first.")
-            else:
                 print("Enigma Settings:\n")
                 print(f"\tRotor Settings: {encryptor.settings}\n")
                 print(f"\tCurrent Rotor Pointer: {encryptor.rotor_pointer_settings}\n")
                 print(f"\tPlugboard: {encryptor.plugboard}\n")
         
-        elif op == '5':
+        elif op == '4':
             if encryptor is None:
                 print("Please create an enigma machine first.")
             else:
@@ -128,7 +116,7 @@ if __name__ == "__main__":
                     encryptor.rotors = Rotors.EvenSet
                 else:
                     print("Wrong input, try again.")
-        elif op == '6':
+        elif op == '5':
             break
         else:
             print("Wrong option, try again.")
