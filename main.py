@@ -1,4 +1,4 @@
-import json, re
+import json
 from enigma import Enigma
 from os import path
 
