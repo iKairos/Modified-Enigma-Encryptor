@@ -47,14 +47,14 @@ if __name__ == "__main__":
                     print("Directory does not exist, try again.")
                     continue
             
-            key_in = list(input("Please enter the key: "))
+            key_in = input("Please enter the key: ")
 
-            if type(key_in) != list or len(key_in) != 18:
+            if any(char in not_allowed for char in key_in) or len(key_in) != 18:
                 print("Wrong key format, try again. (Default Settings Set)")
             else:
-                keys = key_in
+                keys = key_in.upper()
             
-            encryptor = Enigma(plugs, rotor_settings=keys)
+                encryptor = Enigma(plugs, rotor_settings=list(keys))
         
         elif op == '2':
             while True:
@@ -105,5 +105,7 @@ if __name__ == "__main__":
         
         elif op == '5':
             break
+        else:
+            print("Wrong option, try again.")
 
         print("============================")
