@@ -92,7 +92,8 @@ if __name__ == "__main__":
                 if any(char in not_allowed for char in keys) or len(keys) != 18:
                     print("Wrong key format, try again.")
                 else:
-                    encryptor.set_rotor_settings(keys)
+                    keys = keys.upper()
+                    encryptor.set_rotor_settings(list(keys))
         
         elif op == '4':
             if encryptor is None:
