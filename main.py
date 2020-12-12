@@ -8,8 +8,7 @@ def init_menu():
     menu += "1. New Enigma Instance\n"
     menu += "2. Process a Text\n"
     menu += "3. Print Enigma Settings\n"
-    menu += "4. Select Rotor Group\n"
-    menu += "5. Exit\n" 
+    menu += "4. Exit\n" 
 
     print(menu)
 
@@ -105,7 +104,11 @@ if __name__ == "__main__":
                 print(f"\tRotor Settings: {encryptor.settings}\n")
                 print(f"\tCurrent Rotor Pointer: {encryptor.rotor_pointer_settings}\n")
                 print(f"\tPlugboard: {encryptor.plugboard}\n")
-        
+        elif op == '4':
+            break
+        else:
+            print("Wrong option, try again.")
+        """
         elif op == '4':
             if encryptor is None:
                 print("Please create an enigma machine first.")
@@ -118,9 +121,6 @@ if __name__ == "__main__":
                     encryptor.rotors = Rotors.EvenSet
                 else:
                     print("Wrong input, try again.")
-        elif op == '5':
-            break
-        else:
-            print("Wrong option, try again.")
+        """
 
         print("============================")
