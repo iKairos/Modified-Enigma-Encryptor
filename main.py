@@ -1,4 +1,4 @@
-import json
+import json, re
 from enigma import Enigma
 from os import path
 
@@ -14,6 +14,8 @@ def init_menu():
 
 if __name__ == "__main__":
     encryptor = None
+
+    not_allowed = "\"[].!@#$%^&*()-+?_=,<>/\"\'\'1234567890"
 
     while True:
         print(f"\nCURRENT ROTOR SETTINGS: {'None' if encryptor is None else encryptor.settings}")
@@ -45,7 +47,7 @@ if __name__ == "__main__":
                     print("Directory does not exist, try again.")
                     continue
             
-            key_in = input("Please enter keys separated by commas: ").split(',')
+            key_in = list(input("Please enter the key: "))
 
             if type(key_in) != list or len(key_in) != 18:
                 print("Wrong key format, try again. (Default Settings Set)")
@@ -56,22 +58,27 @@ if __name__ == "__main__":
         
         elif op == '2':
             while True:
-                ask = input("Encrypt of Decrypt? (e/d)").lower()
+                ask = input("Encrypt or Decrypt? (e/d)")
                 
                 if ask == 'e':
                     enc = input("Enter a text to be encrypted: ")
 
-                    text = encryptor.encrypt_text(enc)
+                    if not any(char in not_allowed for char in enc):
+                        text = encryptor.encrypt_text(enc.lower())
 
-                    print(f"Encrypted text: {text}")
-                    
+                        print(f"Encrypted text: {text}")
+                    else:
+                        print("Wrong plaintext format. Please make sure your plaintext does not contain any numbers or special characters.")
                     break
                 elif ask == 'd':
                     dec = input("Enter a text to be decrypted: ")
 
-                    text = encryptor.decrypt_text(dec)
+                    if any(char.isnumeric() for char in dec.replace(" ", "")):
+                        text = encryptor.decrypt_text(dec)
 
-                    print(f"Decrypted text: {text}")
+                        print(f"Decrypted text: {text}")
+                    else:
+                        print("Wrong format. Please try again.")
 
                     break
                 else:
@@ -80,7 +87,7 @@ if __name__ == "__main__":
             if encryptor is None:
                 print("Please create an enigma machine first.")
             else:
-                keys = input("Please enter the keys separated by commas: ").split(',')
+                keys = list(input("Please enter the key: "))
 
                 if type(keys) != list or len(keys) != 18:
                     print("Wrong key format, try again.")

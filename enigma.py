@@ -273,7 +273,7 @@ class Enigma:
             for key,value in match.items():
                 if value == number:
                     converted += key
-        
+
         text = converted.upper().replace(" ", "")
 
         text = self.vig.decrypt(text)
