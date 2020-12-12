@@ -26,7 +26,7 @@ class Enigma:
         if rotor_settings is None or type(rotor_settings) is not list:
             self.rotor_settings = [0 for i in range(3)]
             self.vigenere = ['A', 'A', 'A', 'A', 'A', 'A']
-            self.matrix_crypt = Crypto(np.array([[1, 2, 0], [-1,1,3], [1,-1,-4]]))
+            self.matrix_crypt = np.array([[1, 2, 0], [-1,1,3], [1,-1,-4]])
         else:
             self.rotor_settings = rotor_settings[0:3]
             self.vigenere = rotor_settings[3:9]
